@@ -51,7 +51,7 @@ public static class AuthEndpoints
                 return Results.Unauthorized();
             }
 
-            var token = jwtTokenService.GenerateJwtToken(user);
+            var token = jwtTokenService.GenerateToken(user);
 
             return Results.Ok(new LoginResponse { AccessToken = token });
         });
