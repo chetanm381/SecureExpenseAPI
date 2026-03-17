@@ -12,8 +12,6 @@ builder.Services.AddDbContext<AppDbContext>(options =>
     options.UseSqlite(builder.Configuration.GetConnectionString("DefaultConnection")));
 
 // Register the custom password hasher built on top of ASP.NET Core Identity
-builder.Services.AddScoped<IPasswordHasher, PasswordHasher>();
-
 builder.Services.AddScoped<Microsoft.AspNetCore.Identity.IPasswordHasher<User>, Microsoft.AspNetCore.Identity.PasswordHasher<User>>();
 builder.Services.AddScoped<IPasswordHasher, PasswordHasher>();
 
@@ -42,6 +40,6 @@ app.UseHttpsRedirection();
 app.MapGet("/health", () => Results.Ok(new { status = "healthy" }));
 
 // Register auth endpoints
-AuthEndpoints.RegisterEndpoints(app);
+app.MapAuthEndpoints();
 
 app.Run();

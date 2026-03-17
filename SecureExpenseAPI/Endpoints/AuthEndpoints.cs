@@ -10,7 +10,7 @@ namespace SecureExpenseAPI.Endpoints;
 
 public static class AuthEndpoints
 {
-    public static void RegisterEndpoints(WebApplication app)
+    public static void MapAuthEndpoints(this WebApplication app)
     {
         var authGroup = app.MapGroup("/auth");
 
@@ -33,10 +33,11 @@ public static class AuthEndpoints
             _ = await dbContext.SaveChangesAsync();
 
 
-            return Results.Ok(new RegisterResponse
+            return Results.Created($"/auth/register/{user.Id}",new RegisterResponse
             {
                 Id = user.Id,
-                Email = user.Email
+                Email = user.Email, 
+                Role = user.Role
             });
         });
         
