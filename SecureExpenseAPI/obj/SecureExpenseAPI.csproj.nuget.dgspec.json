@@ -1,20 +1,20 @@
 {
   "format": 1,
   "restore": {
-    "C:\\Users\\cheta\\OneDrive\\Documents\\My Development\\SecureExpenseAPI\\SecureExpenseAPI\\SecureExpenseAPI.csproj": {}
+    "/workspaces/SecureExpenseAPI/SecureExpenseAPI/SecureExpenseAPI.csproj": {}
   },
   "projects": {
-    "C:\\Users\\cheta\\OneDrive\\Documents\\My Development\\SecureExpenseAPI\\SecureExpenseAPI\\SecureExpenseAPI.csproj": {
+    "/workspaces/SecureExpenseAPI/SecureExpenseAPI/SecureExpenseAPI.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "C:\\Users\\cheta\\OneDrive\\Documents\\My Development\\SecureExpenseAPI\\SecureExpenseAPI\\SecureExpenseAPI.csproj",
+        "projectUniqueName": "/workspaces/SecureExpenseAPI/SecureExpenseAPI/SecureExpenseAPI.csproj",
         "projectName": "SecureExpenseAPI",
-        "projectPath": "C:\\Users\\cheta\\OneDrive\\Documents\\My Development\\SecureExpenseAPI\\SecureExpenseAPI\\SecureExpenseAPI.csproj",
-        "packagesPath": "C:\\Users\\cheta\\.nuget\\packages\\",
-        "outputPath": "C:\\Users\\cheta\\OneDrive\\Documents\\My Development\\SecureExpenseAPI\\SecureExpenseAPI\\obj\\",
+        "projectPath": "/workspaces/SecureExpenseAPI/SecureExpenseAPI/SecureExpenseAPI.csproj",
+        "packagesPath": "/home/codespace/.nuget/packages/",
+        "outputPath": "/workspaces/SecureExpenseAPI/SecureExpenseAPI/obj/",
         "projectStyle": "PackageReference",
         "configFilePaths": [
-          "C:\\Users\\cheta\\AppData\\Roaming\\NuGet\\NuGet.Config"
+          "/home/codespace/.nuget/NuGet/NuGet.Config"
         ],
         "originalTargetFrameworks": [
           "net10.0"
@@ -38,7 +38,7 @@
           "auditLevel": "low",
           "auditMode": "all"
         },
-        "SdkAnalysisLevel": "10.0.200"
+        "SdkAnalysisLevel": "10.0.100"
       },
       "frameworks": {
         "net10.0": {
@@ -53,6 +53,10 @@
             "Microsoft.EntityFrameworkCore.Sqlite": {
               "target": "Package",
               "version": "[10.0.5, )"
+            },
+            "Swashbuckle.AspNetCore": {
+              "target": "Package",
+              "version": "[6.4.0, )"
             }
           },
           "imports": [
@@ -74,7 +78,7 @@
               "privateAssets": "all"
             }
           },
-          "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\10.0.201/PortableRuntimeIdentifierGraph.json",
+          "runtimeIdentifierGraphPath": "/usr/share/dotnet/sdk/10.0.100/PortableRuntimeIdentifierGraph.json",
           "packagesToPrune": {
             "Microsoft.AspNetCore": "(,10.0.32767]",
             "Microsoft.AspNetCore.Antiforgery": "(,10.0.32767]",

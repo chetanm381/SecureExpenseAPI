@@ -7,10 +7,10 @@ public class PasswordHasher : IPasswordHasher
 {
     private readonly IPasswordHasher<User> _passwordHasher;
 
-    public PasswordHasher()
+    public PasswordHasher(IPasswordHasher<User> passwordHasher)
     {
         // Using ASP.NET Core's built-in PasswordHasher specifically typed for our User entity
-        _passwordHasher = new PasswordHasher<User>();
+        _passwordHasher = passwordHasher;
     }
 
     public string HashPassword(string password)
