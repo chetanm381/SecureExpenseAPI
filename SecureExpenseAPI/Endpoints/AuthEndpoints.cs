@@ -15,7 +15,7 @@ public static class AuthEndpoints
     {
         var authGroup = app.MapGroup("/auth");
 
-        _ = authGroup.MapPost("/register", async (RegisterRequest request, IPasswordHasher passwordHasher, AppDbContext dbContext) =>
+       authGroup.MapPost("/register", async (RegisterRequest request, IPasswordHasher passwordHasher, AppDbContext dbContext) =>
         {
             // Complete registration validation including database checks
             var validationResult = await RegistrationValidationUtils.ValidateRegistrationAsync(request.Email, request.Password, dbContext);
@@ -41,18 +41,17 @@ public static class AuthEndpoints
                 Role = user.Role
             });
         });
-        
 
-        _ = authGroup.MapPost("/login", async (LoginRequest request, IPasswordHasher passwordHasher, AppDbContext dbContext) =>
+
+        _ = authGroup.MapPost("/login", async (LoginRequest request, IPasswordHasher passwordHasher, AppDbContext dbContext, IJwtTokenService jwtTokenService) =>
         {
-            var user = await dbContext.Users.FirstOrDefaultAsync(u => u.Email == request.Email);
+            var user = await dbContext.Users.FirstOrDefaultAsync(u => u.Email.ToLower() == request.Email.ToLower());
             if (user == null || !passwordHasher.VerifyPassword(request.Password, user.PasswordHash))
             {
                 return Results.Unauthorized();
             }
 
-            var token = "dummy-jwt-token";
-            //JwtUtils.GenerateJwtToken(user);
+            var token = jwtTokenService.GenerateJwtToken(user);
 
             return Results.Ok(new LoginResponse { AccessToken = token });
         });

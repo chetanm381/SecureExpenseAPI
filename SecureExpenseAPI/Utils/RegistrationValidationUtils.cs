@@ -93,7 +93,7 @@ public static class RegistrationValidationUtils
     /// </summary>
     public static async Task<ValidationResult> ValidateEmailUniquenessAsync(string email, AppDbContext dbContext)
     {
-        if (await dbContext.Users.AnyAsync(u => u.Email == email))
+        if (await dbContext.Users.AnyAsync(u => u.Email.ToLower() == email.ToLower()))
         {
             return ValidationResult.Failure("Email already in use");
         }
