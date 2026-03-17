@@ -6,6 +6,7 @@ using Microsoft.EntityFrameworkCore;
 using SecureExpenseAPI.DTOs.Auth;
 using SecureExpenseAPI.Utils;
 
+
 namespace SecureExpenseAPI.Endpoints;
 
 public static class AuthEndpoints
@@ -41,5 +42,19 @@ public static class AuthEndpoints
             });
         });
         
+
+        _ = authGroup.MapPost("/login", async (LoginRequest request, IPasswordHasher passwordHasher, AppDbContext dbContext) =>
+        {
+            var user = await dbContext.Users.FirstOrDefaultAsync(u => u.Email == request.Email);
+            if (user == null || !passwordHasher.VerifyPassword(request.Password, user.PasswordHash))
+            {
+                return Results.Unauthorized();
+            }
+
+            var token = "dummy-jwt-token";
+            //JwtUtils.GenerateJwtToken(user);
+
+            return Results.Ok(new LoginResponse { AccessToken = token });
+        });
     }
 }
