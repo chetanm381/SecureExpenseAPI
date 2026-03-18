@@ -16,6 +16,7 @@ builder.Services.AddScoped<Microsoft.AspNetCore.Identity.IPasswordHasher<User>, 
 builder.Services.AddScoped<IPasswordHasher, PasswordHasher>();
 
 builder.Services.AddScoped<IJwtTokenService, JwtTokenService>();
+builder.Services.Configure<JwtSettings>(builder.Configuration.GetSection("Jwt"));
 
 // Add Swagger/OpenAPI services
 builder.Services.AddEndpointsApiExplorer();
