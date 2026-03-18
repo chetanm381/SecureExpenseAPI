@@ -22,7 +22,7 @@ builder.Services.AddScoped<IJwtTokenService, JwtTokenService>();
 builder.Services.Configure<JwtSettings>(builder.Configuration.GetSection("Jwt"));
 
 // Configure JWT Authentication
-var jwtSettings = builder.Configuration.GetSection("Jwt").Get<JwtSettings>();
+var jwtSettings = builder.Configuration.GetSection("Jwt").Get<JwtSettings>() ?? throw new InvalidOperationException("JWT settings are not configured.");
 
 builder.Services.AddAuthentication(options =>
 {
@@ -33,15 +33,19 @@ builder.Services.AddAuthentication(options =>
 {
     options.TokenValidationParameters = new TokenValidationParameters
     {
-        ValidIssuer = jwtSettings?.Issuer,
-        ValidAudience = jwtSettings?.Audience,
-        IssuerSigningKey = new SymmetricSecurityKey(
-            System.Text.Encoding.UTF8.GetBytes(jwtSettings?.SecretKey ?? "")
-        ),
+        ValidIssuer = jwtSettings.Issuer,
+ValidAudience = jwtSettings.Audience,
+IssuerSigningKey = new SymmetricSecurityKey(
+    System.Text.Encoding.UTF8.GetBytes(jwtSettings.SecretKey)
+),
         ValidateLifetime = true,
         ValidateIssuerSigningKey = true,
+        ValidateIssuer = true,
+ValidateAudience = true,ClockSkew = TimeSpan.Zero
     };
 });
+
+builder.Services.AddAuthorization();
 
 // Add Swagger/OpenAPI services
 builder.Services.AddEndpointsApiExplorer();
