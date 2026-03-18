@@ -295,3 +295,11 @@ C:/Users/cheta/OneDrive/Documents/My Development/SecureExpenseAPI/SecureExpenseA
 /workspaces/SecureExpenseAPI/SecureExpenseAPI/bin/Debug/net10.0/Swashbuckle.AspNetCore.SwaggerGen.dll
 /workspaces/SecureExpenseAPI/SecureExpenseAPI/bin/Debug/net10.0/Swashbuckle.AspNetCore.SwaggerUI.dll
 /workspaces/SecureExpenseAPI/SecureExpenseAPI/obj/Debug/net10.0/SecureExpenseAPI.MvcApplicationPartsAssemblyInfo.cs
+/workspaces/SecureExpenseAPI/SecureExpenseAPI/bin/Debug/net10.0/Microsoft.AspNetCore.Authentication.JwtBearer.dll
+/workspaces/SecureExpenseAPI/SecureExpenseAPI/bin/Debug/net10.0/Microsoft.IdentityModel.Abstractions.dll
+/workspaces/SecureExpenseAPI/SecureExpenseAPI/bin/Debug/net10.0/Microsoft.IdentityModel.JsonWebTokens.dll
+/workspaces/SecureExpenseAPI/SecureExpenseAPI/bin/Debug/net10.0/Microsoft.IdentityModel.Logging.dll
+/workspaces/SecureExpenseAPI/SecureExpenseAPI/bin/Debug/net10.0/Microsoft.IdentityModel.Protocols.dll
+/workspaces/SecureExpenseAPI/SecureExpenseAPI/bin/Debug/net10.0/Microsoft.IdentityModel.Protocols.OpenIdConnect.dll
+/workspaces/SecureExpenseAPI/SecureExpenseAPI/bin/Debug/net10.0/Microsoft.IdentityModel.Tokens.dll
+/workspaces/SecureExpenseAPI/SecureExpenseAPI/bin/Debug/net10.0/System.IdentityModel.Tokens.Jwt.dll
