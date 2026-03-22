@@ -76,5 +76,6 @@ app.MapGet("/health", () => Results.Ok(new { status = "healthy" }));
 
 // Register auth endpoints
 app.MapAuthEndpoints();
+app.MapExpenseEndpoints();
 
 app.Run();

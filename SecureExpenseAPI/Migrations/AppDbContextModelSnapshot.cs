@@ -26,10 +26,8 @@ namespace SecureExpenseAPI.Migrations
                     b.Property<decimal>("Amount")
                         .HasColumnType("decimal(18,2)");
 
-                    b.Property<DateTime>("Date")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("TEXT")
-                        .HasDefaultValue(new DateTime(2026, 3, 22, 17, 15, 29, 547, DateTimeKind.Utc).AddTicks(8944));
+                    b.Property<DateTime>("CreatedAt")
+                        .HasColumnType("TEXT");
 
                     b.Property<string>("Title")
                         .IsRequired()
@@ -39,14 +37,9 @@ namespace SecureExpenseAPI.Migrations
                     b.Property<int>("UserId")
                         .HasColumnType("INTEGER");
 
-                    b.Property<int?>("UserId1")
-                        .HasColumnType("INTEGER");
-
                     b.HasKey("Id");
 
                     b.HasIndex("UserId");
-
-                    b.HasIndex("UserId1");
 
                     b.ToTable("Expenses");
                 });
@@ -58,9 +51,7 @@ namespace SecureExpenseAPI.Migrations
                         .HasColumnType("INTEGER");
 
                     b.Property<DateTime>("CreatedAt")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("TEXT")
-                        .HasDefaultValue(new DateTime(2026, 3, 22, 17, 15, 29, 567, DateTimeKind.Utc).AddTicks(1319));
+                        .HasColumnType("TEXT");
 
                     b.Property<string>("Email")
                         .IsRequired()
@@ -90,14 +81,10 @@ namespace SecureExpenseAPI.Migrations
             modelBuilder.Entity("SecureExpenseAPI.Entities.Expense", b =>
                 {
                     b.HasOne("SecureExpenseAPI.Entities.User", "User")
-                        .WithMany()
+                        .WithMany("Expenses")
                         .HasForeignKey("UserId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
-
-                    b.HasOne("SecureExpenseAPI.Entities.User", null)
-                        .WithMany("Expenses")
-                        .HasForeignKey("UserId1");
 
                     b.Navigation("User");
                 });

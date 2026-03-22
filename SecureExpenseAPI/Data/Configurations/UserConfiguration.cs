@@ -30,7 +30,6 @@ public class UserConfiguration : IEntityTypeConfiguration<User>
 
         // CreatedAt Configuration
         builder.Property(u => u.CreatedAt)
-            .IsRequired()
-            .HasDefaultValue(DateTime.UtcNow);
+            .IsRequired();  
     }
 }

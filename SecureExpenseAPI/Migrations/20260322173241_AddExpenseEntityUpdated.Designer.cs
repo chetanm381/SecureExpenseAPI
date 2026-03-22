@@ -11,14 +11,41 @@ using SecureExpenseAPI.Data;
 namespace SecureExpenseAPI.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    [Migration("20260316170915_UpdatedUserSchema")]
-    partial class UpdatedUserSchema
+    [Migration("20260322173241_AddExpenseEntityUpdated")]
+    partial class AddExpenseEntityUpdated
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder.HasAnnotation("ProductVersion", "10.0.5");
+
+            modelBuilder.Entity("SecureExpenseAPI.Entities.Expense", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("INTEGER");
+
+                    b.Property<decimal>("Amount")
+                        .HasColumnType("decimal(18,2)");
+
+                    b.Property<DateTime>("CreatedAt")
+                        .HasColumnType("TEXT");
+
+                    b.Property<string>("Title")
+                        .IsRequired()
+                        .HasMaxLength(255)
+                        .HasColumnType("TEXT");
+
+                    b.Property<int>("UserId")
+                        .HasColumnType("INTEGER");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("UserId");
+
+                    b.ToTable("Expenses");
+                });
 
             modelBuilder.Entity("SecureExpenseAPI.Entities.User", b =>
                 {
@@ -27,9 +54,7 @@ namespace SecureExpenseAPI.Migrations
                         .HasColumnType("INTEGER");
 
                     b.Property<DateTime>("CreatedAt")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("TEXT")
-                        .HasDefaultValue(new DateTime(2026, 3, 16, 17, 9, 15, 407, DateTimeKind.Utc).AddTicks(1005));
+                        .HasColumnType("TEXT");
 
                     b.Property<string>("Email")
                         .IsRequired()
@@ -54,6 +79,22 @@ namespace SecureExpenseAPI.Migrations
                         .IsUnique();
 
                     b.ToTable("Users");
+                });
+
+            modelBuilder.Entity("SecureExpenseAPI.Entities.Expense", b =>
+                {
+                    b.HasOne("SecureExpenseAPI.Entities.User", "User")
+                        .WithMany("Expenses")
+                        .HasForeignKey("UserId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("User");
+                });
+
+            modelBuilder.Entity("SecureExpenseAPI.Entities.User", b =>
+                {
+                    b.Navigation("Expenses");
                 });
 #pragma warning restore 612, 618
         }
