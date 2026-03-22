@@ -57,25 +57,25 @@ public static class AuthEndpoints
             return Results.Ok(new LoginResponse { AccessToken = token });
         });
 
-        authGroup.MapPost("/me",async (ClaimsPrincipal userClaims, AppDbContext dbContext) =>
+        authGroup.MapGet("/me",async (ClaimsPrincipal user, AppDbContext dbContext) =>
         {
-            var userIdClaim = userClaims.Claims.FirstOrDefault(c => c.Type == ClaimTypes.NameIdentifier);
-            if (userIdClaim == null || !int.TryParse(userIdClaim.Value, out int userId))
+            var userIdClaim = user.FindFirst(c => c.Type == ClaimTypes.NameIdentifier)?.Value;
+            if (userIdClaim == null || !int.TryParse(userIdClaim, out int userId))
             {
                 return Results.Unauthorized();
             }
 
-            var user = await dbContext.Users.FindAsync(userId);
-            if (user == null)
+            var Getuser = await dbContext.Users.FindAsync(userId);
+            if (Getuser == null)
             {
                 return Results.Unauthorized();
             }
 
             return Results.Ok(new MeResponse
             {
-                Id = user.Id,
-                Email = user.Email,
-                Role = user.Role
+                Id = Getuser.Id,
+                Email = Getuser.Email,
+                Role = Getuser.Role
             });
         }).RequireAuthorization();
     }
