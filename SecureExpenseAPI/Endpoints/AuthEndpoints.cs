@@ -32,10 +32,10 @@ public static class AuthEndpoints
             };
 
             dbContext.Users.Add(user);
-            _ = await dbContext.SaveChangesAsync();
+            await dbContext.SaveChangesAsync();
 
 
-            return Results.Created($"/auth/register/{user.Id}",new RegisterResponse
+            return Results.Ok(new RegisterResponse
             {
                 Id = user.Id,
                 Email = user.Email, 
