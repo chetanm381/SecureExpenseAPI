@@ -29,23 +29,17 @@ public static class CategoryEndpoints
 
         categoryGroup.MapPost("/", async (ClaimsPrincipal user, CreateCategoryRequest request, AppDbContext dbContext) =>
         {
-            if (string.IsNullOrWhiteSpace(request.Name))
-            {
-                return Results.BadRequest(new { message = "Category name is required" });
-            }
-
-            if (request.Name.Length > 100)
-            {
-                return Results.BadRequest(new { message = "Category name cannot exceed 100 characters" });
-            }
-
             var userId = UserUtils.GetUserIdFromClaims(user);
 
-            // Check if name already exists for this user
-            var nameExists = await dbContext.Categories.AnyAsync(c => c.UserId == userId && c.Name.ToLower() == request.Name.ToLower());
-            if (nameExists)
+            var validationResult = await CategoryValidationUtils.ValidateCategoryAsync(request.Name, userId, dbContext);
+            if (!validationResult.IsValid)
             {
-                return Results.Conflict(new { message = $"Category with name '{request.Name}' already exists." });
+                // Uniqueness failure (already exists) should return 409 Conflict
+                if (validationResult.ErrorMessage?.Contains("already exists") == true)
+                {
+                    return Results.Conflict(new { message = validationResult.ErrorMessage });
+                }
+                return Results.BadRequest(new { message = validationResult.ErrorMessage });
             }
             
             var category = new Category
@@ -66,16 +60,6 @@ public static class CategoryEndpoints
 
         categoryGroup.MapPut("/{id}", async (ClaimsPrincipal user, int id, UpdateCategoryRequest request, AppDbContext dbContext) =>
         {
-            if (string.IsNullOrWhiteSpace(request.Name))
-            {
-                return Results.BadRequest(new { message = "Category name is required" });
-            }
-
-            if (request.Name.Length > 100)
-            {
-                return Results.BadRequest(new { message = "Category name cannot exceed 100 characters" });
-            }
-
             var userId = UserUtils.GetUserIdFromClaims(user);
 
             var category = await dbContext.Categories
@@ -86,13 +70,14 @@ public static class CategoryEndpoints
                 return Results.NotFound();
             }
 
-            // Check if name already exists for another category of the same user
-            var nameExists = await dbContext.Categories
-                .AnyAsync(c => c.UserId == userId && c.Id != id && c.Name.ToLower() == request.Name.ToLower());
-                
-            if (nameExists)
+            var validationResult = await CategoryValidationUtils.ValidateCategoryAsync(request.Name, userId, dbContext, id);
+            if (!validationResult.IsValid)
             {
-                return Results.Conflict(new { message = $"Category with name '{request.Name}' already exists." });
+                if (validationResult.ErrorMessage?.Contains("already exists") == true)
+                {
+                    return Results.Conflict(new { message = validationResult.ErrorMessage });
+                }
+                return Results.BadRequest(new { message = validationResult.ErrorMessage });
             }
 
             category.Name = request.Name;
