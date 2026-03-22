@@ -19,15 +19,22 @@ public class ExpenseConfiguration : IEntityTypeConfiguration<Expense>
             .HasColumnType("decimal(18,2)");
 
         builder.Property(e => e.CreatedAt)
-            .IsRequired()
-            ;
+            .IsRequired();
 
         builder.Property(e => e.UserId)
             .IsRequired();
 
+        builder.Property(e => e.CategoryId)
+            .IsRequired(false);
+
         builder.HasOne(e => e.User)
-    .WithMany(u => u.Expenses)
-    .HasForeignKey(e => e.UserId)
-    .OnDelete(DeleteBehavior.Cascade);
+            .WithMany(u => u.Expenses)
+            .HasForeignKey(e => e.UserId)
+            .OnDelete(DeleteBehavior.Cascade);
+
+        builder.HasOne(e => e.Category)
+            .WithMany(c => c.Expenses)
+            .HasForeignKey(e => e.CategoryId)
+            .OnDelete(DeleteBehavior.SetNull);
     }
 }

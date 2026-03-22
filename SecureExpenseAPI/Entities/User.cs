@@ -9,4 +9,5 @@ public class User
     public DateTime CreatedAt { get; set; } = DateTime.UtcNow;
     
     public ICollection<Expense> Expenses { get; set; } = new List<Expense>();
+    public ICollection<Category> Categories { get; set; } = new List<Category>();
 }

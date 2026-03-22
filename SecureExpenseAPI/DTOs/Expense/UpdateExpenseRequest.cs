@@ -1,14 +1,8 @@
-
-
 namespace SecureExpenseAPI.DTOs.Expenses;
 
-public class ExpenseResponse
+public class UpdateExpenseRequest
 {
-    public int Id { get; set; }
     public string Title { get; set; } = string.Empty;
     public decimal Amount { get; set; }
-    public DateTime CreatedAt { get; set; }
     public int? CategoryId { get; set; }
-    public string? CategoryName { get; set; }
 }
-  
