@@ -20,10 +20,10 @@ public class JwtTokenService : IJwtTokenService
     public string GenerateToken(User user)
     {
 
-        var SignedKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_jwtSettings.SecretKey));
-        var SigningCredentials = new SigningCredentials(SignedKey, SecurityAlgorithms.HmacSha256);
+        var signedKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_jwtSettings.SecretKey));
+        var signingCredentials = new SigningCredentials(signedKey, SecurityAlgorithms.HmacSha256);
 
-        var Claims = new List<Claim>{
+        var claims = new List<Claim>{
                 new Claim(ClaimTypes.NameIdentifier,user.Id.ToString()),
                 new Claim(ClaimTypes.Email,user.Email),
                 new Claim(ClaimTypes.Role,user.Role.ToString())
@@ -31,7 +31,7 @@ public class JwtTokenService : IJwtTokenService
     };
 
 
-        var Token = new JwtSecurityToken(_jwtSettings.Issuer, _jwtSettings.Audience, Claims, expires: DateTime.UtcNow.AddMinutes(_jwtSettings.ExpiryMinutes), signingCredentials: SigningCredentials);
+        var Token = new JwtSecurityToken(_jwtSettings.Issuer, _jwtSettings.Audience, claims, expires: DateTime.UtcNow.AddMinutes(_jwtSettings.ExpiryMinutes), signingCredentials: signingCredentials);
         return new JwtSecurityTokenHandler().WriteToken(Token);
     }
 }
