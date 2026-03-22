@@ -55,6 +55,42 @@ public static class ExpenseEndpoints
         });
 
 
+        expenseGroup.MapGet("/{id}", async(ClaimsPrincipal user, int id, AppDbContext dbContext)=>{
+            var userId = UserUtils.GetUserIdFromClaims(user);
+            var expense = await dbContext.Expenses.FirstOrDefaultAsync(e=>e.Id==id && e.UserId==userId);
+            if(expense == null){
+                return Results.NotFound();
+            }
+            return Results.Ok(new ExpenseResponse
+            {
+                Id = expense.Id,
+                Title = expense.Title,
+                Amount = expense.Amount,
+                CreatedAt = expense.CreatedAt
+            });
+        });
+
+        expenseGroup.MapPut("/{id}", async(ClaimsPrincipal user ,int id ,UpdateExpenseRequest request, AppDbContext dbContext)=>{
+           var userId = UserUtils.GetUserIdFromClaims(user);
+            if(userId == null){
+                return Results.Unauthorized();
+            }
+            var expense = await dbContext.Expenses.FirstOrDefaultAsync(e=>e.Id==id && e.UserId==userId);
+            if(expense == null){
+                return Results.NotFound();
+            }
+            expense.Title = request.Title;
+            expense.Amount = request.Amount;
+            await dbContext.SaveChangesAsync();
+            return Results.Ok(new ExpenseResponse
+            {
+                Id = expense.Id,
+                Title = expense.Title,
+                Amount = expense.Amount,
+                CreatedAt = expense.CreatedAt
+            });
+        });
+
         expenseGroup.MapDelete("/{id}", async (ClaimsPrincipal user, int id, AppDbContext dbContext) =>
         {
             var userId = UserUtils.GetUserIdFromClaims(user);
