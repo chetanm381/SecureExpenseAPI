@@ -1,7 +1,7 @@
 
 using SecureExpenseAPI.Data;
 using SecureExpenseAPI.Utils;
-using SecureExpenseAPI.DTOs.Expense;
+using SecureExpenseAPI.DTOs.Expenses;
 using Microsoft.EntityFrameworkCore;
 using System.Security.Claims;
 using SecureExpenseAPI.Entities;

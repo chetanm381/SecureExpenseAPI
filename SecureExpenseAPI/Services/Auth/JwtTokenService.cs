@@ -31,7 +31,7 @@ public class JwtTokenService : IJwtTokenService
     };
 
 
-        var Token = new JwtSecurityToken(_jwtSettings.Issuer, _jwtSettings.Audience, Claims, expires: DateTime.UtcNow.AddMinutes(_jwtSettings.ExpiryMinutes));
+        var Token = new JwtSecurityToken(_jwtSettings.Issuer, _jwtSettings.Audience, Claims, expires: DateTime.UtcNow.AddMinutes(_jwtSettings.ExpiryMinutes), signingCredentials: SigningCredentials);
         return new JwtSecurityTokenHandler().WriteToken(Token);
     }
 }

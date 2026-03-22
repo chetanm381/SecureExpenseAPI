@@ -1,6 +1,6 @@
 
 
-namespace SecureExpenseAPI.DTOs.Expense;
+namespace SecureExpenseAPI.DTOs.Expenses;
 
 public class ExpenseResponse
 {
