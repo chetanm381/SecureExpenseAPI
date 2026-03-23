@@ -24,10 +24,11 @@ public static class SummaryEndpoints
                 TotalAmount = expenses.Sum(e => e.Amount),
                 TotalCount = expenses.Count,
                 Categories = expenses
-                    .Where(e => e.Category != null && !string.IsNullOrEmpty(e.Category.Name))
-                    .GroupBy(e => e.Category.Name ?? "Uncategorized")
+                    .Where(e => e.Category != null && !string.IsNullOrEmpty(e.Category?.Name))
+                    .GroupBy(e => e.Category?.Name ?? "Uncategorized")
                     .OrderByDescending(g => g.Sum(e => e.Amount))
                     .Select(g => new CategorySummary
+                    
                     {
                         CategoryName = g.Key,
                         TotalAmount = g.Sum(e => e.Amount)
