@@ -1,8 +1,6 @@
 using System.Security.Claims;
-using Microsoft.EntityFrameworkCore;
-using SecureExpenseAPI.Data;
 using SecureExpenseAPI.DTOs.Categories;
-using SecureExpenseAPI.Entities;
+using SecureExpenseAPI.Services.Categories;
 using SecureExpenseAPI.Utils;
 
 namespace SecureExpenseAPI.Endpoints;
@@ -13,96 +11,62 @@ public static class CategoryEndpoints
     {
         var categoryGroup = app.MapGroup("/categories").RequireAuthorization();
 
-        categoryGroup.MapGet("/", async (ClaimsPrincipal user, AppDbContext dbContext) =>
+        categoryGroup.MapGet("/", async (ClaimsPrincipal user, ICategoryService categoryService) =>
         {
             var userId = UserUtils.GetUserIdFromClaims(user);
-            var categories = await dbContext.Categories
-                .Where(c => c.UserId == userId)
-                .Select(c => new CategoryResponse
-                {
-                    Id = c.Id,
-                    Name = c.Name
-                })
-                .ToListAsync();
+            var categories = await categoryService.GetCategoriesAsync(userId);
             return Results.Ok(categories);
         });
 
-        categoryGroup.MapPost("/", async (ClaimsPrincipal user, CreateCategoryRequest request, AppDbContext dbContext) =>
+        categoryGroup.MapPost("/", async (ClaimsPrincipal user, CreateCategoryRequest request, ICategoryService categoryService) =>
         {
             var userId = UserUtils.GetUserIdFromClaims(user);
-
-            var validationResult = await CategoryValidationUtils.ValidateCategoryAsync(request.Name, userId, dbContext);
-            if (!validationResult.IsValid)
-            {
-                // Uniqueness failure (already exists) should return 409 Conflict
-                if (validationResult.ErrorMessage?.Contains("already exists") == true)
-                {
-                    return Results.Conflict(new { message = validationResult.ErrorMessage });
-                }
-                return Results.BadRequest(new { message = validationResult.ErrorMessage });
-            }
             
-            var category = new Category
+            var result = await categoryService.CreateCategoryAsync(userId, request);
+            if (result.ErrorMessage != null)
             {
-                Name = request.Name,
-                UserId = userId
-            };
-
-            dbContext.Categories.Add(category);
-            await dbContext.SaveChangesAsync();
-
-            return Results.Created($"/categories/{category.Id}", new CategoryResponse
-            {
-                Id = category.Id,
-                Name = category.Name
-            });
-        });
-
-        categoryGroup.MapPut("/{id}", async (ClaimsPrincipal user, int id, UpdateCategoryRequest request, AppDbContext dbContext) =>
-        {
-            var userId = UserUtils.GetUserIdFromClaims(user);
-
-            var category = await dbContext.Categories
-                .FirstOrDefaultAsync(c => c.Id == id && c.UserId == userId);
-
-            if (category == null)
-            {
-                return Results.NotFound();
-            }
-
-            var validationResult = await CategoryValidationUtils.ValidateCategoryAsync(request.Name, userId, dbContext, id);
-            if (!validationResult.IsValid)
-            {
-                if (validationResult.ErrorMessage?.Contains("already exists") == true)
+                if (result.IsConflict)
                 {
-                    return Results.Conflict(new { message = validationResult.ErrorMessage });
+                    return Results.Conflict(new { message = result.ErrorMessage });
                 }
-                return Results.BadRequest(new { message = validationResult.ErrorMessage });
+                return Results.BadRequest(new { message = result.ErrorMessage });
             }
 
-            category.Name = request.Name;
-            await dbContext.SaveChangesAsync();
-
-            return Results.Ok(new CategoryResponse
-            {
-                Id = category.Id,
-                Name = category.Name
-            });
+            return Results.Created($"/categories/{result.Data!.Id}", result.Data);
         });
 
-        categoryGroup.MapDelete("/{id}", async (ClaimsPrincipal user, int id, AppDbContext dbContext) =>
+        categoryGroup.MapPut("/{id}", async (ClaimsPrincipal user, int id, UpdateCategoryRequest request, ICategoryService categoryService) =>
         {
             var userId = UserUtils.GetUserIdFromClaims(user);
-            var category = await dbContext.Categories
-                .FirstOrDefaultAsync(c => c.Id == id && c.UserId == userId);
+            
+            var result = await categoryService.UpdateCategoryAsync(userId, id, request);
 
-            if (category == null)
+            if (result.IsNotFound)
             {
                 return Results.NotFound();
             }
 
-            dbContext.Categories.Remove(category);
-            await dbContext.SaveChangesAsync();
+            if (result.ErrorMessage != null)
+            {
+                if (result.IsConflict)
+                {
+                    return Results.Conflict(new { message = result.ErrorMessage });
+                }
+                return Results.BadRequest(new { message = result.ErrorMessage });
+            }
+
+            return Results.Ok(result.Data);
+        });
+
+        categoryGroup.MapDelete("/{id}", async (ClaimsPrincipal user, int id, ICategoryService categoryService) =>
+        {
+            var userId = UserUtils.GetUserIdFromClaims(user);
+            var isDeleted = await categoryService.DeleteCategoryAsync(userId, id);
+
+            if (!isDeleted)
+            {
+                return Results.NotFound();
+            }
 
             return Results.NoContent();
         });

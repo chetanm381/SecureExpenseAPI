@@ -3035,24 +3035,31 @@
     ]
   },
   "packageFolders": {
-    "/home/codespace/.nuget/packages/": {}
+    "C:\\Users\\ShaktiSingh\\.nuget\\packages\\": {},
+    "C:\\Program Files (x86)\\Microsoft Visual Studio\\Shared\\NuGetPackages": {}
   },
   "project": {
     "version": "1.0.0",
     "restore": {
-      "projectUniqueName": "/workspaces/SecureExpenseAPI/SecureExpenseAPI/SecureExpenseAPI.csproj",
+      "projectUniqueName": "C:\\Users\\ShaktiSingh\\Documents\\MyDevelopement\\SecureExpenseAPI\\SecureExpenseAPI\\SecureExpenseAPI.csproj",
       "projectName": "SecureExpenseAPI",
-      "projectPath": "/workspaces/SecureExpenseAPI/SecureExpenseAPI/SecureExpenseAPI.csproj",
-      "packagesPath": "/home/codespace/.nuget/packages/",
-      "outputPath": "/workspaces/SecureExpenseAPI/SecureExpenseAPI/obj/",
+      "projectPath": "C:\\Users\\ShaktiSingh\\Documents\\MyDevelopement\\SecureExpenseAPI\\SecureExpenseAPI\\SecureExpenseAPI.csproj",
+      "packagesPath": "C:\\Users\\ShaktiSingh\\.nuget\\packages\\",
+      "outputPath": "C:\\Users\\ShaktiSingh\\Documents\\MyDevelopement\\SecureExpenseAPI\\SecureExpenseAPI\\obj\\",
       "projectStyle": "PackageReference",
+      "fallbackFolders": [
+        "C:\\Program Files (x86)\\Microsoft Visual Studio\\Shared\\NuGetPackages"
+      ],
       "configFilePaths": [
-        "/home/codespace/.nuget/NuGet/NuGet.Config"
+        "C:\\Users\\ShaktiSingh\\AppData\\Roaming\\NuGet\\NuGet.Config",
+        "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.FallbackLocation.config",
+        "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.Offline.config"
       ],
       "originalTargetFrameworks": [
         "net10.0"
       ],
       "sources": {
+        "C:\\Program Files (x86)\\Microsoft SDKs\\NuGetPackages\\": {},
         "https://api.nuget.org/v3/index.json": {}
       },
       "frameworks": {
@@ -3071,7 +3078,7 @@
         "auditLevel": "low",
         "auditMode": "all"
       },
-      "SdkAnalysisLevel": "10.0.100"
+      "SdkAnalysisLevel": "10.0.200"
     },
     "frameworks": {
       "net10.0": {
@@ -3115,7 +3122,7 @@
             "privateAssets": "all"
           }
         },
-        "runtimeIdentifierGraphPath": "/usr/share/dotnet/sdk/10.0.100/PortableRuntimeIdentifierGraph.json",
+        "runtimeIdentifierGraphPath": "C:\\Users\\ShaktiSingh\\.dotnet10\\sdk\\10.0.201/PortableRuntimeIdentifierGraph.json",
         "packagesToPrune": {
           "Microsoft.AspNetCore": "(,10.0.32767]",
           "Microsoft.AspNetCore.Antiforgery": "(,10.0.32767]",

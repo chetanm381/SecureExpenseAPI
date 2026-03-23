@@ -10,7 +10,7 @@ public static class SummaryEndpoints
 {
     public static void MapSummaryEndpoints(this WebApplication app)
     {
-        app.MapGet("/api/summary", async (AppDbContext dbContext,  ClaimsPrincipal user) =>
+        app.MapGet("/summary", async (AppDbContext dbContext,  ClaimsPrincipal user) =>
         {
             var userId = UserUtils.GetUserIdFromClaims(user);
 
