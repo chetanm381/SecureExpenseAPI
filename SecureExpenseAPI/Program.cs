@@ -2,6 +2,7 @@ using Microsoft.EntityFrameworkCore;
 using SecureExpenseAPI.Data;
 using SecureExpenseAPI.Services.Auth;
 using SecureExpenseAPI.Services.Categories;
+using SecureExpenseAPI.Services.Expenses;
 using SecureExpenseAPI.Entities;
 using SecureExpenseAPI.Endpoints;
 using Microsoft.AspNetCore.HttpOverrides;
@@ -20,6 +21,8 @@ builder.Services.AddDbContext<AppDbContext>(options =>
 builder.Services.AddScoped<Microsoft.AspNetCore.Identity.IPasswordHasher<User>, Microsoft.AspNetCore.Identity.PasswordHasher<User>>();
 builder.Services.AddScoped<IPasswordHasher, PasswordHasher>();
 builder.Services.AddScoped<ICategoryService, CategoryService>();
+builder.Services.AddScoped<IExpenseService, ExpenseService>();
+builder.Services.AddScoped<IAuthService, AuthService>();
 
 builder.Services.AddScoped<IJwtTokenService, JwtTokenService>();
 builder.Services.Configure<JwtSettings>(builder.Configuration.GetSection("Jwt"));

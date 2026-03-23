@@ -1,12 +1,7 @@
-
-using SecureExpenseAPI.Data;
-using SecureExpenseAPI.Services.Auth;
-using SecureExpenseAPI.Entities;
-using Microsoft.EntityFrameworkCore;
-using SecureExpenseAPI.DTOs.Auth;
-using SecureExpenseAPI.Utils;
 using System.Security.Claims;
-
+using SecureExpenseAPI.DTOs.Auth;
+using SecureExpenseAPI.Services.Auth;
+using SecureExpenseAPI.Utils;
 
 namespace SecureExpenseAPI.Endpoints;
 
@@ -16,67 +11,39 @@ public static class AuthEndpoints
     {
         var authGroup = app.MapGroup("/auth");
 
-       authGroup.MapPost("/register", async (RegisterRequest request, IPasswordHasher passwordHasher, AppDbContext dbContext) =>
+        authGroup.MapPost("/register", async (RegisterRequest request, IAuthService authService) =>
         {
-            // Complete registration validation including database checks
-            var validationResult = await RegistrationValidationUtils.ValidateRegistrationAsync(request.Email, request.Password, dbContext);
-            if (!validationResult.IsValid)
+            var result = await authService.RegisterAsync(request);
+            if (result.ErrorMessage != null)
             {
-                return Results.BadRequest(new { message = validationResult.ErrorMessage });
+                return Results.BadRequest(new { message = result.ErrorMessage });
             }
 
-            var user = new User
-            {
-                Email = request.Email,
-                PasswordHash = passwordHasher.HashPassword(request.Password)
-            };
-
-            dbContext.Users.Add(user);
-            await dbContext.SaveChangesAsync();
-
-
-            return Results.Ok(new RegisterResponse
-            {
-                Id = user.Id,
-                Email = user.Email, 
-                Role = user.Role
-            });
+            return Results.Ok(result.Data);
         });
 
-
-       authGroup.MapPost("/login", async (LoginRequest request, IPasswordHasher passwordHasher, AppDbContext dbContext, IJwtTokenService jwtTokenService) =>
+        authGroup.MapPost("/login", async (LoginRequest request, IAuthService authService) =>
         {
-            var user = await dbContext.Users.FirstOrDefaultAsync(u => u.Email.ToLower() == request.Email.ToLower());
-            if (user == null || !passwordHasher.VerifyPassword(request.Password, user.PasswordHash))
+            var result = await authService.LoginAsync(request);
+            if (result.ErrorMessage != null)
             {
-                return Results.Unauthorized();
+                return Results.Unauthorized(); 
             }
 
-            var token = jwtTokenService.GenerateToken(user);
-
-            return Results.Ok(new LoginResponse { AccessToken = token });
+            return Results.Ok(result.Data);
         });
 
-        authGroup.MapGet("/me",async (ClaimsPrincipal user, AppDbContext dbContext) =>
+        authGroup.MapGet("/me", async (ClaimsPrincipal user, IAuthService authService) =>
         {
-            var userIdClaim = user.FindFirst(c => c.Type == ClaimTypes.NameIdentifier)?.Value;
-            if (userIdClaim == null || !int.TryParse(userIdClaim, out int userId))
+            var userId = UserUtils.GetUserIdFromClaims(user);
+            
+            var me = await authService.GetMeAsync(userId);
+            if (me == null)
             {
                 return Results.Unauthorized();
             }
 
-            var Getuser = await dbContext.Users.FindAsync(userId);
-            if (Getuser == null)
-            {
-                return Results.Unauthorized();
-            }
-
-            return Results.Ok(new MeResponse
-            {
-                Id = Getuser.Id,
-                Email = Getuser.Email,
-                Role = Getuser.Role
-            });
+            return Results.Ok(me);
         }).RequireAuthorization();
     }
 }
